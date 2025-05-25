@@ -3,16 +3,20 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ultra Maxi Futuriste - IA Très Avancée</title>
+<title>Ultra Maxi Futuriste - IA Futuriste</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+  * {
+    box-sizing: border-box;
+  }
   body {
-    margin:0; padding:0;
+    margin: 0; padding: 0;
     font-family: 'Orbitron', sans-serif;
     background: linear-gradient(135deg, #010f24, #0a183f);
     color: #0ff;
     height: 100vh;
-    display: flex; flex-direction: column;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
   }
   header {
@@ -22,48 +26,73 @@
     color: #0ff;
     text-shadow: 0 0 12px #0ff, 0 0 25px #0ff;
     user-select:none;
+    animation: neonGlow 2.5s ease-in-out infinite alternate;
   }
-  #clock {
-    position: absolute;
-    top: 1rem; left: 1rem;
-    font-size: 1.2rem;
-    color: #0ff;
-    background: rgba(0,255,255,0.1);
-    padding: 0.3rem 0.6rem;
-    border-radius: 8px;
-    font-weight: 600;
-    text-shadow: 0 0 8px #0ff;
-    user-select:none;
+  @keyframes neonGlow {
+    0%,100% {
+      text-shadow:
+        0 0 5px #0ff,
+        0 0 10px #0ff,
+        0 0 20px #0ff,
+        0 0 30px #0ff,
+        0 0 40px #0ff,
+        0 0 55px #0ff,
+        0 0 75px #0ff;
+      color: #0ff;
+    }
+    50% {
+      text-shadow:
+        0 0 10px #0ff,
+        0 0 20px #0ff,
+        0 0 30px #0ff,
+        0 0 40px #0ff,
+        0 0 50px #0ff,
+        0 0 65px #0ff,
+        0 0 85px #0ff;
+      color: #0affff;
+    }
   }
   main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     padding: 1rem;
     position: relative;
   }
   #input-container {
     width: 70%;
-    max-width: 800px;
-    height: 2.6cm; /* hauteur précise demandée */
+    max-width: 900px;
+    height: 2.6cm;
     background: rgba(0,255,255,0.05);
     border: 2px solid #0ff;
     border-radius: 30px;
     display: flex;
     align-items: center;
     padding: 0 1rem;
-    transition: all 0.4s ease;
+    transition: all 0.6s ease;
     user-select:none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
-  #input-container.centered {
-    height: 6cm;
-    justify-content: center;
+  #input-container.shrink {
+    width: 90%;
+    max-width: 500px;
+    height: 3cm;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,255,255,0.12);
+    border-color: #0affff;
+    box-shadow: 0 0 20px #0affffaa;
   }
   #user-input {
     flex: 1;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     color: #0ff;
     background: transparent;
     border: none;
@@ -78,7 +107,7 @@
     font-weight: 700;
     text-shadow: 0 0 10px #0ff;
   }
-  #send-button, #voice-button {
+  button {
     background: #00ffff;
     border: none;
     color: #003333;
@@ -90,16 +119,24 @@
     box-shadow: 0 0 12px #00ffff;
     user-select:none;
     transition: background 0.3s ease;
+    min-width: 48px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  #send-button:hover, #voice-button:hover {
+  button:hover {
     background: #00bbbb;
     box-shadow: 0 0 22px #00ffff;
   }
-  #response-container {
-    margin-top: 2rem;
-    width: 70%;
-    max-width: 800px;
-    min-height: 10rem;
+  #response-area {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 35%;
+    max-width: 450px;
+    min-height: 200px;
     background: rgba(0,255,255,0.07);
     border-radius: 20px;
     padding: 1.2rem 1.5rem;
@@ -109,10 +146,16 @@
     text-shadow: 0 0 12px #0ff;
     white-space: pre-wrap;
     user-select:none;
-    min-height: 150px;
     box-shadow: inset 0 0 20px #0ff33;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
   }
-  #response-voice-button {
+  #response-area.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #response-voice-btn {
     margin-top: 1rem;
     background: #00ffff;
     border: none;
@@ -124,8 +167,9 @@
     box-shadow: 0 0 12px #00ffff;
     user-select:none;
     transition: background 0.3s ease;
+    display: none;
   }
-  #response-voice-button:hover {
+  #response-voice-btn:hover {
     background: #00bbbb;
     box-shadow: 0 0 22px #00ffff;
   }
@@ -143,121 +187,126 @@
   .mascot:hover {
     transform: scale(1.1);
   }
-  #mode-toggle {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    background: #00ffff;
-    border-radius: 25px;
-    padding: 0.4rem 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    color: #003333;
-    user-select:none;
-    box-shadow: 0 0 12px #00ffff;
-    transition: background 0.3s ease;
-  }
-  #mode-toggle:hover {
-    background: #00bbbb;
-    box-shadow: 0 0 22px #00ffff;
-  }
-
-  /* Futuriste néon glow text animation */
-  @keyframes neonGlow {
-    0%,100% { text-shadow:
-      0 0 5px #0ff,
-      0 0 10px #0ff,
-      0 0 20px #0ff,
-      0 0 30px #0ff,
-      0 0 40px #0ff,
-      0 0 55px #0ff,
-      0 0 75px #0ff;
-      color: #0ff;
-    }
-    50% {
-      text-shadow:
-        0 0 10px #0ff,
-        0 0 20px #0ff,
-        0 0 30px #0ff,
-        0 0 40px #0ff,
-        0 0 50px #0ff,
-        0 0 65px #0ff,
-        0 0 85px #0ff;
-      color: #0affff;
-    }
-  }
-  header, #user-input::placeholder {
-    animation: neonGlow 2.5s ease-in-out infinite alternate;
-  }
-
-  /* Dark mode */
-  body.dark {
-    background: linear-gradient(135deg, #00101f, #001a3f);
-    color: #0ff;
-  }
-  body.dark #input-container {
-    border-color: #0ff;
-    background: rgba(0,255,255,0.1);
-  }
-  body.dark #response-container {
-    background: rgba(0,255,255,0.15);
-    box-shadow: inset 0 0 30px #0ff;
-  }
-  body.dark #send-button, body.dark #voice-button, body.dark #response-voice-button, body.dark #mode-toggle {
-    background: #0ff;
-    color: #003333;
-    box-shadow: 0 0 15px #0ff;
-  }
-  body.dark #send-button:hover, body.dark #voice-button:hover, body.dark #response-voice-button:hover, body.dark #mode-toggle:hover {
-    background: #0cc;
-    box-shadow: 0 0 25px #0ff;
-  }
 </style>
 </head>
 <body>
-  <div id="clock">00:00</div>
-  <header>Ultra Maxi Futuriste - Posez-moi une question</header>
 
-  <main>
-    <div id="input-container" class="centered">
-      <input type="text" id="user-input" placeholder="Posez-moi une question..." autocomplete="off" />
-      <button id="voice-button" title="Parler à l'IA">🎤</button>
-      <button id="send-button" title="Envoyer la question">➡️</button>
-    </div>
+<header>Ultra Maxi Futuriste - Posez-moi une question</header>
 
-    <div id="response-container" aria-live="polite" aria-atomic="true"></div>
-    <button id="response-voice-button" title="Écouter la réponse" style="display:none;">🔊 Écouter</button>
-  </main>
+<main>
+  <div id="input-container">
+    <input id="user-input" type="text" placeholder="Posez-moi une question..." autocomplete="off" />
+    <button id="voice-btn" title="Parlez à l'IA">🎤</button>
+    <button id="send-btn" title="Envoyer">➡️</button>
+  </div>
 
-  <img src="goat.png" alt="Mascotte Ultra Maxi Futuriste" class="mascot" id="mascot" title="Cliquez pour un message spécial" />
+  <div id="response-area" aria-live="polite" aria-atomic="true"></div>
+  <button id="response-voice-btn" title="Écouter la réponse">🔊 Écouter</button>
+</main>
 
-  <button id="mode-toggle" title="Basculer mode clair/sombre">Mode Sombre</button>
+<img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Mascotte Ultra Maxi Futuriste" class="mascot" id="mascot" title="Cliquez pour un message spécial" />
 
 <script>
-  // Horloge intelligente avec chronomètre 5 minutes
-  const clock = document.getElementById('clock');
-  let timerInterval = null;
-  let totalSeconds = 0;
-  const maxTimeSeconds = 300; // 5 minutes
+  const inputContainer = document.getElementById('input-container');
+  const userInput = document.getElementById('user-input');
+  const sendBtn = document.getElementById('send-btn');
+  const voiceBtn = document.getElementById('voice-btn');
+  const responseArea = document.getElementById('response-area');
+  const responseVoiceBtn = document.getElementById('response-voice-btn');
+  const mascot = document.getElementById('mascot');
 
-  function formatTime(s) {
-    const m = Math.floor(s / 60).toString().padStart(2,'0');
-    const sec = (s % 60).toString().padStart(2,'0');
-    return `${m}:${sec}`;
+  // Fonction pour simuler une réponse IA (à remplacer par appel API)
+  function getIAResponse(question) {
+    // Juste un truc factice pour l'exemple
+    const answers = [
+      "Analysons cela... Très intéressant.",
+      "Je vois, c’est un sujet complexe. Voici mon avis.",
+      "Votre question est prise en compte. Je réfléchis...",
+      "Réponse en cours de calcul, veuillez patienter...",
+      "Voici ce que je peux vous dire : c'est fascinant !",
+      "La réponse est dans les étoiles, mais voici une piste."
+    ];
+    // Retourne une réponse aléatoire après 1.5s
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(answers[Math.floor(Math.random() * answers.length)]);
+      }, 1500);
+    });
   }
 
-  function startTimer() {
-    if(timerInterval) clearInterval(timerInterval);
-    totalSeconds = 0;
-    clock.textContent = formatTime(totalSeconds);
-    timerInterval = setInterval(() => {
-      totalSeconds++;
-      clock.textContent = formatTime(totalSeconds);
-      if(totalSeconds >= maxTimeSeconds) {
-        clearInterval(timerInterval);
-        alert("Temps écoulé !");
-      }
-    }, 1000);
+  // Fonction pour lancer la reconnaissance vocale (Web Speech API)
+  function startSpeechRecognition() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      alert("Reconnaissance vocale non supportée par votre navigateur.");
+      return;
+    }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'fr-FR';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.start();
+
+    voiceBtn.disabled = true;
+    voiceBtn.textContent = '🎙️...';
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      userInput.value = transcript;
+      voiceBtn.textContent = '🎤';
+      voiceBtn.disabled = false;
+      userInput.focus();
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error', event.error);
+      voiceBtn.textContent = '🎤';
+      voiceBtn.disabled = false;
+      alert("Erreur lors de la reconnaissance vocale : " + event.error);
+    };
+
+    recognition.onend = () => {
+      voiceBtn.textContent = '🎤';
+      voiceBtn.disabled = false;
+    };
   }
 
-  //
+  // Fonction pour synthèse vocale de la réponse
+  function speakResponse(text) {
+    if (!('speechSynthesis' in window)) {
+      alert("Synthèse vocale non supportée par votre navigateur.");
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'fr-FR';
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // Gérer l'envoi
+  async function handleSend() {
+    const question = userInput.value.trim();
+    if (!question) return;
+
+    // Transition : input redescend
+    inputContainer.classList.add('shrink');
+
+    // Affiche la question dans la zone réponse temporairement (style différencié)
+    responseArea.classList.add('visible');
+    responseArea.textContent = "Question : " + question + "\n\nChargement de la réponse...";
+
+    // Efface l'input pour préparer la prochaine question
+    userInput.value = '';
+
+    // Récupère la réponse (simulée)
+    const iaAnswer = await getIAResponse(question);
+
+    // Affiche la réponse
+    responseArea.textContent = iaAnswer;
+
+    // Affiche bouton écouter
+    responseVoiceBtn.style.display = 'inline-block';
+    responseVoiceBtn.onclick = () => speakResponse(iaAnswer);
+
+    // Remet le focus dans l'input pour la question suivante
+    userInput.focus();
