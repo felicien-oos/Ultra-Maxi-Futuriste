@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ultra Maxi Futuriste - IA Très Avancée</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+  body {
+    margin:0; padding:0;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(135deg, #010f24, #0a183f);
+    color: #0ff;
+    height: 100vh;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  header {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+    font-size: 2.2rem;
+    color: #0ff;
+    text-shadow: 0 0 12px #0ff, 0 0 25px #0ff;
+    user-select:none;
+  }
+  #clock {
+    position: absolute;
+    top: 1rem; left: 1rem;
+    font-size: 1.2rem;
+    color: #0ff;
+    background: rgba(0,255,255,0.1);
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-shadow: 0 0 8px #0ff;
+    user-select:none;
+  }
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    position: relative;
+  }
+  #input-container {
+    width: 70%;
+    max-width: 800px;
+    height: 2.6cm; /* hauteur précise demandée */
+    background: rgba(0,255,255,0.05);
+    border: 2px solid #0ff;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    transition: all 0.4s ease;
+    user-select:none;
+  }
+  #input-container.centered {
+    height: 6cm;
+    justify-content: center;
+  }
+  #user-input {
+    flex: 1;
+    font-size: 1.5rem;
+    color: #0ff;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    caret-color: #0ff;
+    user-select:text;
+  }
+  #user-input::placeholder {
+    color: #0ffcc;
+    font-weight: 700;
+    text-shadow: 0 0 10px #0ff;
+  }
+  #send-button, #voice-button {
+    background: #00ffff;
+    border: none;
+    color: #003333;
+    font-weight: 700;
+    padding: 0.6rem 1rem;
+    margin-left: 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 0 12px #00ffff;
+    user-select:none;
+    transition: background 0.3s ease;
+  }
+  #send-button:hover, #voice-button:hover {
+    background: #00bbbb;
+    box-shadow: 0 0 22px #00ffff;
+  }
+  #response-container {
+    margin-top: 2rem;
+    width: 70%;
+    max-width: 800px;
+    min-height: 10rem;
+    background: rgba(0,255,255,0.07);
+    border-radius: 20px;
+    padding: 1.2rem 1.5rem;
+    font-size: 1.3rem;
+    line-height: 1.5;
+    color: #0ff;
+    text-shadow: 0 0 12px #0ff;
+    white-space: pre-wrap;
+    user-select:none;
+    min-height: 150px;
+    box-shadow: inset 0 0 20px #0ff33;
+  }
+  #response-voice-button {
+    margin-top: 1rem;
+    background: #00ffff;
+    border: none;
+    color: #003333;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 0 12px #00ffff;
+    user-select:none;
+    transition: background 0.3s ease;
+  }
+  #response-voice-button:hover {
+    background: #00bbbb;
+    box-shadow: 0 0 22px #00ffff;
+  }
+  .mascot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #00ffffaa;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  .mascot:hover {
+    transform: scale(1.1);
+  }
+  #mode-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: #00ffff;
+    border-radius: 25px;
+    padding: 0.4rem 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: #003333;
+    user-select:none;
+    box-shadow: 0 0 12px #00ffff;
+    transition: background 0.3s ease;
+  }
+  #mode-toggle:hover {
+    background: #00bbbb;
+    box-shadow: 0 0 22px #00ffff;
+  }
+
+  /* Futuriste néon glow text animation */
+  @keyframes neonGlow {
+    0%,100% { text-shadow:
+      0 0 5px #0ff,
+      0 0 10px #0ff,
+      0 0 20px #0ff,
+      0 0 30px #0ff,
+      0 0 40px #0ff,
+      0 0 55px #0ff,
+      0 0 75px #0ff;
+      color: #0ff;
+    }
+    50% {
+      text-shadow:
+        0 0 10px #0ff,
+        0 0 20px #0ff,
+        0 0 30px #0ff,
+        0 0 40px #0ff,
+        0 0 50px #0ff,
+        0 0 65px #0ff,
+        0 0 85px #0ff;
+      color: #0affff;
+    }
+  }
+  header, #user-input::placeholder {
+    animation: neonGlow 2.5s ease-in-out infinite alternate;
+  }
+
+  /* Dark mode */
+  body.dark {
+    background: linear-gradient(135deg, #00101f, #001a3f);
+    color: #0ff;
+  }
+  body.dark #input-container {
+    border-color: #0ff;
+    background: rgba(0,255,255,0.1);
+  }
+  body.dark #response-container {
+    background: rgba(0,255,255,0.15);
+    box-shadow: inset 0 0 30px #0ff;
+  }
+  body.dark #send-button, body.dark #voice-button, body.dark #response-voice-button, body.dark #mode-toggle {
+    background: #0ff;
+    color: #003333;
+    box-shadow: 0 0 15px #0ff;
+  }
+  body.dark #send-button:hover, body.dark #voice-button:hover, body.dark #response-voice-button:hover, body.dark #mode-toggle:hover {
+    background: #0cc;
+    box-shadow: 0 0 25px #0ff;
+  }
+</style>
+</head>
+<body>
+  <div id="clock">00:00</div>
+  <header>Ultra Maxi Futuriste - Posez-moi une question</header>
+
+  <main>
+    <div id="input-container" class="centered">
+      <input type="text" id="user-input" placeholder="Posez-moi une question..." autocomplete="off" />
+      <button id="voice-button" title="Parler à l'IA">🎤</button>
+      <button id="send-button" title="Envoyer la question">➡️</button>
+    </div>
+
+    <div id="response-container" aria-live="polite" aria-atomic="true"></div>
+    <button id="response-voice-button" title="Écouter la réponse" style="display:none;">🔊 Écouter</button>
+  </main>
+
+  <img src="goat.png" alt="Mascotte Ultra Maxi Futuriste" class="mascot" id="mascot" title="Cliquez pour un message spécial" />
+
+  <button id="mode-toggle" title="Basculer mode clair/sombre">Mode Sombre</button>
+
+<script>
+  // Horloge intelligente avec chronomètre 5 minutes
+  const clock = document.getElementById('clock');
+  let timerInterval = null;
+  let totalSeconds = 0;
+  const maxTimeSeconds = 300; // 5 minutes
+
+  function formatTime(s) {
+    const m = Math.floor(s / 60).toString().padStart(2,'0');
+    const sec = (s % 60).toString().padStart(2,'0');
+    return `${m}:${sec}`;
+  }
+
+  function startTimer() {
+    if(timerInterval) clearInterval(timerInterval);
+    totalSeconds = 0;
+    clock.textContent = formatTime(totalSeconds);
+    timerInterval = setInterval(() => {
+      totalSeconds++;
+      clock.textContent = formatTime(totalSeconds);
+      if(totalSeconds >= maxTimeSeconds) {
+        clearInterval(timerInterval);
+        alert("Temps écoulé !");
+      }
+    }, 1000);
+  }
+
+  //
