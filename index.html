@@ -3,241 +3,155 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ultra Maxi Futuriste - IA Futuriste</title>
+<title>Interface IA interactive</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
-  * {
-    box-sizing: border-box;
-  }
   body {
-    margin: 0; padding: 0;
-    font-family: 'Orbitron', sans-serif;
-    background: linear-gradient(135deg, #010f24, #0a183f);
+    margin:0; padding:0;
+    font-family: Arial, sans-serif;
+    background: #001f3f;
     color: #0ff;
     height: 100vh;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
   }
   header {
-    text-align: center;
-    padding: 2rem 1rem 1rem;
-    font-size: 2.2rem;
-    color: #0ff;
-    text-shadow: 0 0 12px #0ff, 0 0 25px #0ff;
-    user-select:none;
-    animation: neonGlow 2.5s ease-in-out infinite alternate;
-  }
-  @keyframes neonGlow {
-    0%,100% {
-      text-shadow:
-        0 0 5px #0ff,
-        0 0 10px #0ff,
-        0 0 20px #0ff,
-        0 0 30px #0ff,
-        0 0 40px #0ff,
-        0 0 55px #0ff,
-        0 0 75px #0ff;
-      color: #0ff;
-    }
-    50% {
-      text-shadow:
-        0 0 10px #0ff,
-        0 0 20px #0ff,
-        0 0 30px #0ff,
-        0 0 40px #0ff,
-        0 0 50px #0ff,
-        0 0 65px #0ff,
-        0 0 85px #0ff;
-      color: #0affff;
-    }
+    text-align:center;
+    padding: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 0 0 10px #0ff;
   }
   main {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
   }
+  /* Container input centré au départ */
   #input-container {
-    width: 70%;
-    max-width: 900px;
-    height: 2.6cm;
-    background: rgba(0,255,255,0.05);
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    background: rgba(0,255,255,0.1);
     border: 2px solid #0ff;
     border-radius: 30px;
-    display: flex;
-    align-items: center;
-    padding: 0 1rem;
-    transition: all 0.6s ease;
-    user-select:none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    transition: all 0.5s ease;
+    width: 60%;
+    max-width: 700px;
   }
+  /* Quand envoyé, l'input descend en bas */
   #input-container.shrink {
-    width: 90%;
-    max-width: 500px;
-    height: 3cm;
-    position: fixed;
+    top: auto;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0,255,255,0.12);
-    border-color: #0affff;
-    box-shadow: 0 0 20px #0affffaa;
+    width: 90%;
+    max-width: 600px;
+    background: rgba(0,255,255,0.15);
   }
   #user-input {
-    flex: 1;
-    font-size: 1.6rem;
-    color: #0ff;
-    background: transparent;
+    flex-grow: 1;
+    font-size: 1.2rem;
+    padding: 10px;
+    border-radius: 20px;
     border: none;
     outline: none;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    caret-color: #0ff;
-    user-select:text;
+    background: transparent;
+    color: #0ff;
+    box-shadow: inset 0 0 5px #0ff66;
   }
   #user-input::placeholder {
-    color: #0ffcc;
-    font-weight: 700;
-    text-shadow: 0 0 10px #0ff;
+    color: #0ffaaa;
   }
   button {
-    background: #00ffff;
+    background: #0ff;
     border: none;
-    color: #003333;
-    font-weight: 700;
-    padding: 0.6rem 1rem;
-    margin-left: 1rem;
-    border-radius: 25px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    font-size: 1.2rem;
     cursor: pointer;
-    box-shadow: 0 0 12px #00ffff;
-    user-select:none;
+    color: #003333;
     transition: background 0.3s ease;
-    min-width: 48px;
-    height: 38px;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
   }
   button:hover {
-    background: #00bbbb;
-    box-shadow: 0 0 22px #00ffff;
+    background: #0cc;
   }
+  /* Zone réponse à droite */
   #response-area {
-    position: fixed;
+    position: absolute;
+    right: 20px;
     top: 50%;
-    right: 20px;
     transform: translateY(-50%);
-    width: 35%;
-    max-width: 450px;
-    min-height: 200px;
-    background: rgba(0,255,255,0.07);
+    background: rgba(0,255,255,0.15);
     border-radius: 20px;
-    padding: 1.2rem 1.5rem;
-    font-size: 1.3rem;
-    line-height: 1.5;
-    color: #0ff;
-    text-shadow: 0 0 12px #0ff;
+    padding: 20px;
+    width: 30%;
+    max-width: 350px;
+    min-height: 150px;
+    box-shadow: 0 0 15px #0ff;
+    font-size: 1.1rem;
     white-space: pre-wrap;
-    user-select:none;
-    box-shadow: inset 0 0 20px #0ff33;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.6s ease;
   }
-  #response-area.visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  #response-voice-btn {
-    margin-top: 1rem;
-    background: #00ffff;
-    border: none;
-    color: #003333;
-    font-weight: 700;
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    cursor: pointer;
-    box-shadow: 0 0 12px #00ffff;
-    user-select:none;
-    transition: background 0.3s ease;
+  /* Cacher la réponse au départ */
+  #response-area.hidden {
     display: none;
-  }
-  #response-voice-btn:hover {
-    background: #00bbbb;
-    box-shadow: 0 0 22px #00ffff;
-  }
-  .mascot {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    box-shadow: 0 0 15px #00ffffaa;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-  }
-  .mascot:hover {
-    transform: scale(1.1);
   }
 </style>
 </head>
 <body>
 
-<header>Ultra Maxi Futuriste - Posez-moi une question</header>
+<header>Pose ta question à l'IA</header>
 
 <main>
   <div id="input-container">
-    <input id="user-input" type="text" placeholder="Posez-moi une question..." autocomplete="off" />
-    <button id="voice-btn" title="Parlez à l'IA">🎤</button>
-    <button id="send-btn" title="Envoyer">➡️</button>
+    <input type="text" id="user-input" placeholder="Pose ta question ici..." autocomplete="off" />
+    <button id="mic-btn" title="Parler"><span>🎤</span></button>
+    <button id="send-btn" title="Envoyer"><span>➡️</span></button>
   </div>
 
-  <div id="response-area" aria-live="polite" aria-atomic="true"></div>
-  <button id="response-voice-btn" title="Écouter la réponse">🔊 Écouter</button>
+  <div id="response-area" class="hidden" aria-live="polite" aria-atomic="true"></div>
 </main>
-
-<img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Mascotte Ultra Maxi Futuriste" class="mascot" id="mascot" title="Cliquez pour un message spécial" />
 
 <script>
   const inputContainer = document.getElementById('input-container');
   const userInput = document.getElementById('user-input');
+  const micBtn = document.getElementById('mic-btn');
   const sendBtn = document.getElementById('send-btn');
-  const voiceBtn = document.getElementById('voice-btn');
   const responseArea = document.getElementById('response-area');
-  const responseVoiceBtn = document.getElementById('response-voice-btn');
-  const mascot = document.getElementById('mascot');
 
-  // Fonction pour simuler une réponse IA (à remplacer par appel API)
-  function getIAResponse(question) {
-    // Juste un truc factice pour l'exemple
-    const answers = [
-      "Analysons cela... Très intéressant.",
-      "Je vois, c’est un sujet complexe. Voici mon avis.",
-      "Votre question est prise en compte. Je réfléchis...",
-      "Réponse en cours de calcul, veuillez patienter...",
-      "Voici ce que je peux vous dire : c'est fascinant !",
-      "La réponse est dans les étoiles, mais voici une piste."
+  // Simule une réponse IA (à remplacer par API réelle)
+  async function getIAResponse(question) {
+    const replies = [
+      "Bonne question ! Je réfléchis...",
+      "Voici ma réponse intelligente à ta question.",
+      "Je vais chercher l'info pour toi, attends un instant.",
+      "Analysons ça ensemble...",
+      "Excellente interrogation !",
+      "Je te réponds immédiatement..."
     ];
-    // Retourne une réponse aléatoire après 1.5s
-    return new Promise((resolve) => {
+    // Pause 1.5s pour simuler réflexion
+    return new Promise(resolve => {
       setTimeout(() => {
-        resolve(answers[Math.floor(Math.random() * answers.length)]);
+        const reply = replies[Math.floor(Math.random()*replies.length)];
+        resolve(reply + " (réponse simulée)");
       }, 1500);
     });
   }
 
-  // Fonction pour lancer la reconnaissance vocale (Web Speech API)
+  // Fonction dictée via Web Speech API
   function startSpeechRecognition() {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      alert("Reconnaissance vocale non supportée par votre navigateur.");
+      alert("La reconnaissance vocale n'est pas supportée sur ce navigateur.");
       return;
     }
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -246,67 +160,72 @@
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
+    micBtn.disabled = true;
+    micBtn.textContent = '🎙️';
+
     recognition.start();
 
-    voiceBtn.disabled = true;
-    voiceBtn.textContent = '🎙️...';
-
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      userInput.value = transcript;
-      voiceBtn.textContent = '🎤';
-      voiceBtn.disabled = false;
+    recognition.onresult = event => {
+      const speechResult = event.results[0][0].transcript;
+      userInput.value = speechResult;
+      micBtn.textContent = '🎤';
+      micBtn.disabled = false;
       userInput.focus();
     };
-
-    recognition.onerror = (event) => {
-      console.error('Speech recognition error', event.error);
-      voiceBtn.textContent = '🎤';
-      voiceBtn.disabled = false;
-      alert("Erreur lors de la reconnaissance vocale : " + event.error);
+    recognition.onerror = event => {
+      alert("Erreur reconnaissance vocale: " + event.error);
+      micBtn.textContent = '🎤';
+      micBtn.disabled = false;
     };
-
     recognition.onend = () => {
-      voiceBtn.textContent = '🎤';
-      voiceBtn.disabled = false;
+      micBtn.textContent = '🎤';
+      micBtn.disabled = false;
     };
   }
 
-  // Fonction pour synthèse vocale de la réponse
-  function speakResponse(text) {
-    if (!('speechSynthesis' in window)) {
-      alert("Synthèse vocale non supportée par votre navigateur.");
-      return;
-    }
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'fr-FR';
-    window.speechSynthesis.speak(utterance);
-  }
-
-  // Gérer l'envoi
+  // Gestion envoi question + affichage réponse
   async function handleSend() {
     const question = userInput.value.trim();
-    if (!question) return;
+    if (question === "") return;
 
-    // Transition : input redescend
+    // Déplacer l'input vers le bas et changer style
     inputContainer.classList.add('shrink');
 
-    // Affiche la question dans la zone réponse temporairement (style différencié)
-    responseArea.classList.add('visible');
-    responseArea.textContent = "Question : " + question + "\n\nChargement de la réponse...";
+    // Afficher la zone réponse si cachée
+    if(responseArea.classList.contains('hidden')) {
+      responseArea.classList.remove('hidden');
+    }
 
-    // Efface l'input pour préparer la prochaine question
-    userInput.value = '';
+    // Affiche question et "en attente"
+    responseArea.textContent = "Question : " + question + "\n\nRéponse : (en attente...)";
 
-    // Récupère la réponse (simulée)
+    // Vide l'input pour nouvelle question
+    userInput.value = "";
+    userInput.focus();
+
+    // Récupérer la réponse IA (simulée)
     const iaAnswer = await getIAResponse(question);
 
     // Affiche la réponse
     responseArea.textContent = iaAnswer;
+  }
 
-    // Affiche bouton écouter
-    responseVoiceBtn.style.display = 'inline-block';
-    responseVoiceBtn.onclick = () => speakResponse(iaAnswer);
+  // Événements boutons
+  micBtn.addEventListener('click', () => {
+    startSpeechRecognition();
+  });
+  sendBtn.addEventListener('click', () => {
+    handleSend();
+  });
 
-    // Remet le focus dans l'input pour la question suivante
-    userInput.focus();
+  // Envoi aussi avec touche Enter
+  userInput.addEventListener('keydown', (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSend();
+    }
+  });
+</script>
+
+</body>
+</html>
